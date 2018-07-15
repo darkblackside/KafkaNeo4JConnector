@@ -25,6 +25,7 @@ public class TransactionWorker implements TransactionWork<String>
 
 	@Override
 	public String execute(Transaction tx) {
+		LOGGER.debug("run command");
 		StatementResult result = tx.run(command.getStringCommand());
 
 		return writeToResultObject(command, result);
@@ -32,7 +33,7 @@ public class TransactionWorker implements TransactionWork<String>
 
 	private String writeToResultObject(final Neo4JCommand command, StatementResult result)
 	{
-		//TODO to TEST!
+		LOGGER.debug("Write results to result object");
 		String results = "[";
 		boolean first = true;
 
