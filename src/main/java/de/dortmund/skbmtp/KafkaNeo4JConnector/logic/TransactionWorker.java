@@ -43,6 +43,15 @@ public class TransactionWorker implements TransactionWork<String>
 				Record record = result.next();
 
 				ObjectMapper mapper = new ObjectMapper();
+				
+				try
+				{
+					LOGGER.debug("Keys" + mapper.writeValueAsString(record.keys()));
+				}
+				catch (JsonProcessingException e1)
+				{
+					e1.printStackTrace();
+				}
 
 				if(first)
 				{
