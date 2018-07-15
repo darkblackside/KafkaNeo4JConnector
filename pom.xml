@@ -5,7 +5,7 @@
 
 	<groupId>de.dortmund.skbmtp</groupId>
 	<artifactId>KafkaNeo4JConnector</artifactId>
-	<version>0.1.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>KafkaNeo4JConnector</name>
