@@ -37,41 +37,38 @@ public class TransactionWorker implements TransactionWork<String>
 		String results = "[";
 		boolean first = true;
 
-		if(command.getResultType() != null)
+		while ( result.hasNext())
 		{
-			while ( result.hasNext() && command.getResultType() != null)
+			Record record = result.next();
+
+			ObjectMapper mapper = new ObjectMapper();
+			
+			try
 			{
-				Record record = result.next();
+				LOGGER.debug("Keys" + mapper.writeValueAsString(record.keys()));
+			}
+			catch (JsonProcessingException e1)
+			{
+				e1.printStackTrace();
+			}
 
-				ObjectMapper mapper = new ObjectMapper();
-				
-				try
-				{
-					LOGGER.debug("Keys" + mapper.writeValueAsString(record.keys()));
-				}
-				catch (JsonProcessingException e1)
-				{
-					e1.printStackTrace();
-				}
+			if(first)
+			{
+				first = false;
+			}
+			else
+			{
+				results = results + ",";
+			}
 
-				if(first)
-				{
-					first = false;
-				}
-				else
-				{
-					results = results + ",";
-				}
-
-				try
-				{
-					results = results + mapper.writeValueAsString(record.asMap()) + "";
-				}
-				catch (JsonProcessingException e)
-				{
-					LOGGER.info("Error while mapping record to json");
-					e.printStackTrace();
-				}
+			try
+			{
+				results = results + mapper.writeValueAsString(record.asMap()) + "";
+			}
+			catch (JsonProcessingException e)
+			{
+				LOGGER.info("Error while mapping record to json");
+				e.printStackTrace();
 			}
 		}
 

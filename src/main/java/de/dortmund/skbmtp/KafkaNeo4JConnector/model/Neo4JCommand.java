@@ -39,9 +39,6 @@ public class Neo4JCommand implements Serializable
 	@JsonInclude
 	private String result;
 
-	@JsonInclude
-	private Class<? extends Serializable> resultType = null;
-
 	/**
 	 * Do not use this Constructor! It is only needed for serialization
 	 */
@@ -166,10 +163,5 @@ public class Neo4JCommand implements Serializable
 		{
 			stringCommand = Util.toCypher(jcQueryCommand, Format.PRETTY_3);
 		}
-	}
-
-	public Class<? extends Serializable> getResultType()
-	{
-		return resultType;
 	}
 }
