@@ -19,11 +19,11 @@ public class Neo4JProducer implements Runnable {
 
 	public Neo4JProducer(String filename)
 	{
-		settings = Settings.getInstance(Neo4JProducer.class, filename);
+		settings = Settings.getInstance(filename);
 	}
 	public Neo4JProducer()
 	{
-		settings = Settings.getInstance(Neo4JProducer.class);
+		settings = Settings.getInstance();
 	}
 
 	@Override

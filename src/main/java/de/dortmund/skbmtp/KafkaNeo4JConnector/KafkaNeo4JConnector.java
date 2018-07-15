@@ -22,46 +22,39 @@ import de.dortmund.skbmtp.KafkaNeo4JConnector.model.Neo4JCommand;
  * Hello world!
  *
  */
-public class KafkaNeo4JConnector
+public class KafkaNeo4JConnector implements Runnable
 {
 	private static final Logger LOGGER = LogManager.getLogger(KafkaNeo4JConnector.class);
 
 	public static final String NEO4J_URL = "bolt://localhost:7687";
 	public static final String NEO4J_USERNAME = "neo4j";
 	public static final String NEO4J_PASSWORD = "neo4jadmin";
-	public static final String KAFKA_SERVERS = "172.22.160.123:9092";
+	public static final String KAFKA_SERVERS = "localhost:9092";
 	public static final String KAFKA_INPUTTOPIC = "topic2";
 	public static final String KAFKA_OUTPUTTOPIC = "topic3";
 	public static final String KAFKA_GROUPID = "myconsumer";
+	
+	String neo4jUrl = NEO4J_URL;
+	String neo4jUsername = NEO4J_USERNAME;
+	String neo4jPassword = NEO4J_PASSWORD;
+	String kafkaServers = KAFKA_SERVERS;
+	String kafkaInput = KAFKA_INPUTTOPIC;
+	String kafkaOutput = KAFKA_OUTPUTTOPIC;
+	String kafkaGroupId = KAFKA_GROUPID;
+	Settings settings = null;
 
-	public static void main(String[] args) throws Exception
+	public KafkaNeo4JConnector(String[] args)
 	{
-		String neo4jUrl = NEO4J_URL;
-		String neo4jUsername = NEO4J_USERNAME;
-		String neo4jPassword = NEO4J_PASSWORD;
-		String kafkaServers = KAFKA_SERVERS;
-		String kafkaInput = KAFKA_INPUTTOPIC;
-		String kafkaOutput = KAFKA_OUTPUTTOPIC;
-		String kafkaGroupId = KAFKA_GROUPID;
-		Settings settings = null;
 
 		if(args.length == 0)
 		{
-			settings = Settings.getInstance(KafkaNeo4JConnector.class);
+			settings = Settings.getInstance();
+			LOGGER.info("Load default settings");
 		}
 		if(args.length == 1)
 		{
-			settings = Settings.getInstance(KafkaNeo4JConnector.class, args[0]);
-		}
-		if(settings != null)
-		{
-			neo4jUrl = settings.getNeo4JServer();
-			neo4jPassword = settings.getNeo4JPassword();
-			neo4jUsername = settings.getNeo4JUser();
-			kafkaServers = settings.getBootstrapServers();
-			kafkaInput = settings.getKafkaTopicImprovedTwitter();
-			kafkaOutput = settings.getKafkaTopicNeo4JFeedback();
-			kafkaGroupId = settings.getGroupId();
+			settings = Settings.getInstance(args[0]);
+			LOGGER.info("Load settings from file: " + args[0]);
 		}
 
 		if(args.length >= 2)
@@ -89,7 +82,21 @@ public class KafkaNeo4JConnector
 		{
 			kafkaGroupId = args[6];
 		}
+		
+		if(settings != null)
+		{
+			neo4jUrl = settings.getNeo4JServer();
+			neo4jPassword = settings.getNeo4JPassword();
+			neo4jUsername = settings.getNeo4JUser();
+			kafkaServers = settings.getBootstrapServers();
+			kafkaInput = settings.getKafkaTopicImprovedTwitter();
+			kafkaOutput = settings.getKafkaTopicNeo4JFeedback();
+			kafkaGroupId = settings.getGroupId();
+		}
+	}
 
+	public void run()
+	{
 		final String finNeo4JUrl = neo4jUrl;
 		final String finNeo4JUsername = neo4jUsername;
 		final String finNeo4JPassword = neo4jPassword;
@@ -119,5 +126,12 @@ public class KafkaNeo4JConnector
 			System.exit(1);
 		}
 		System.exit(0);
+	}
+	
+	public static void main(String[] args) throws Exception
+	{
+		KafkaNeo4JConnector conn = new KafkaNeo4JConnector(args);
+		Thread t = new Thread(conn);
+		t.start();
 	}
 }

@@ -1,5 +1,7 @@
 package de.dortmund.skbmtp.KafkaNeo4JConnector.logic;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
@@ -41,17 +43,17 @@ public class Settings {
 	private Settings() {
 	}
 
-	public static Settings getInstance(Class<?> startingClass, String filename) {
+	public static Settings getInstance(String filename) {
 		if (instance == null) {
 			instance = new Settings();
-			instance.loadSettings(startingClass, filename);
+			instance.loadSettings(filename);
 		}
 
 		return instance;
 	}
 
-	public static Settings getInstance(Class<?> startingClass) {
-		return getInstance(startingClass, null);
+	public static Settings getInstance() {
+		return getInstance(null);
 	}
 
 	public String getBootstrapServers() {
@@ -126,16 +128,18 @@ public class Settings {
 		return neo4jPassword;
 	}
 
-	private void loadSettings(Class<?> startingClass, String filename) {
+	private void loadSettings(String filename) {
 		props = new Properties();
 
 		try {
 			if (filename != null) {
+				File f = new File(filename);
+				filename = f.getAbsoluteFile().toString();
 				LOGGER.info("Load settings from file " + filename);
-				props.load(new InputStreamReader(startingClass.getResourceAsStream(filename)));
+				props.load(new InputStreamReader(new FileInputStream(filename)));
 			} else {
 				LOGGER.info("Load settings from file /conf.properties");
-				props.load(new InputStreamReader(startingClass.getResourceAsStream("/conf.properties")));
+				props.load(new InputStreamReader(Settings.class.getResourceAsStream("/conf.properties")));
 			}
 		} catch (IOException e1) {
 			LOGGER.info("Error loading properties");
