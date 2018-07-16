@@ -174,7 +174,7 @@ public class TransactionWorker implements TransactionWork<String>
 				else
 				{
 					//TODO - Björn Merschmeier - 16.07.2018 - do something with an object
-					throw new RuntimeException("non-values lists are not compatible yet" + o.toString());
+					result += o.toString();
 				}
 			}
 			result +="]";
@@ -197,7 +197,7 @@ public class TransactionWorker implements TransactionWork<String>
 				else
 				{
 					//TODO - Björn Merschmeier - 16.07.2018 - do something with an object
-					throw new RuntimeException("non-values maps are not compatible yet" + keyValue.toString());
+					result += keyValue.toString();
 				}
 			}
 
