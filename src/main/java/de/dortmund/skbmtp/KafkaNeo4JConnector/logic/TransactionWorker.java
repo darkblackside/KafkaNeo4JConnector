@@ -1,5 +1,7 @@
 package de.dortmund.skbmtp.KafkaNeo4JConnector.logic;
 
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.neo4j.driver.v1.Record;
@@ -33,19 +35,23 @@ public class TransactionWorker implements TransactionWork<String>
 
 	private String writeToResultObject(final Neo4JCommand command, StatementResult result)
 	{
-		LOGGER.debug("Write results to result object");
+		LOGGER.info("Write results to result object");
 		String results = "[";
 		boolean first = true;
 
-		while ( result.hasNext())
+		List<Record> recordList = result.list();
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		/*while ( result.hasNext())
 		{
 			Record record = result.next();
 
-			ObjectMapper mapper = new ObjectMapper();
-			
+
+
 			try
 			{
-				LOGGER.debug("Keys" + mapper.writeValueAsString(record.keys()));
+				LOGGER.info("Keys" + mapper.writeValueAsString(record.keys()));
 			}
 			catch (JsonProcessingException e1)
 			{
@@ -70,9 +76,19 @@ public class TransactionWorker implements TransactionWork<String>
 				LOGGER.info("Error while mapping record to json");
 				e.printStackTrace();
 			}
-		}
+		}*/
 
 		results = results + "]";
+
+		try
+		{
+			results = mapper.writeValueAsString(recordList);
+		}
+		catch (JsonProcessingException e)
+		{
+			LOGGER.error("Could not serialize whole list");
+			e.printStackTrace();
+		}
 		return results;
 	}
 }
