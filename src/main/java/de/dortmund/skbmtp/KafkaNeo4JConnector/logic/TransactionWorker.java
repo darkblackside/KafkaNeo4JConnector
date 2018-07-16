@@ -2,6 +2,7 @@ package de.dortmund.skbmtp.KafkaNeo4JConnector.logic;
 
 import java.io.NotSerializableException;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -51,8 +52,16 @@ public class TransactionWorker implements TransactionWork<String>
 
 		while(result.hasNext())
 		{
-			results += "[";
 			Record record = result.next();
+
+			if(first)
+			{
+				first = false;
+			}
+			else
+			{
+				results = results + ",";
+			}
 
 			try
 			{
@@ -81,8 +90,6 @@ public class TransactionWorker implements TransactionWork<String>
 						LOGGER.error("Couldn't get json from values", e.getMessage());
 					}
 
-					record.get(key).keys();
-					record.get(key).values();
 					LOGGER.debug("Value of " + key + ": " + mapper.writeValueAsString(record.get(key).asNode().keys()));
 				}
 			}
@@ -90,27 +97,6 @@ public class TransactionWorker implements TransactionWork<String>
 			{
 				e1.printStackTrace();
 			}
-
-			if(first)
-			{
-				first = false;
-			}
-			else
-			{
-				results = results + ",";
-			}
-
-			try
-			{
-				LOGGER.debug("write all record contents once");
-				results = results + mapper.writeValueAsString(record) + "";
-			}
-			catch (JsonProcessingException e)
-			{
-				LOGGER.info("Error while mapping record to json");
-				e.printStackTrace();
-			}
-			results += "]";
 		}
 
 		results = results + "]";
@@ -176,17 +162,47 @@ public class TransactionWorker implements TransactionWork<String>
 		}
 
 		try	{
-			//List<Object> value = actualKey.asList();
-			//TODO - Björn Merschmeier - 16.07.2018 - do something with a list
-			throw new RuntimeException("lists are not compatible yet");
+			List<Object> value = actualKey.asList();
+
+			String result = "[";
+			for(Object o : value)
+			{
+				if(o instanceof Value)
+				{
+					result += getJsonFromValues((Value)o);
+				}
+				else
+				{
+					//TODO - Björn Merschmeier - 16.07.2018 - do something with an object
+					throw new RuntimeException("non-values lists are not compatible yet" + o.toString());
+				}
+			}
+			result +="]";
+			return result;
 		} catch(Uncoercible e) {
 			LOGGER.debug("Object is not a list");
 		}
 
 		try	{
-			//Map<String, Object> value = actualKey.asMap();
-			//TODO - Björn Merschmeier - 16.07.2018 - do something with a map
-			throw new RuntimeException("maps are not compatible yet");
+			Map<String, Object> value = actualKey.asMap();
+			String result ="{";
+			for(String key : value.keySet())
+			{
+				Object keyValue = value.get(key);
+
+				if(keyValue instanceof Value)
+				{
+					result += getJsonFromValues((Value) keyValue);
+				}
+				else
+				{
+					//TODO - Björn Merschmeier - 16.07.2018 - do something with an object
+					throw new RuntimeException("non-values maps are not compatible yet" + keyValue.toString());
+				}
+			}
+
+			result += "}";
+			return result;
 		} catch(Uncoercible e) {
 			LOGGER.debug("Object is not a list");
 		}
