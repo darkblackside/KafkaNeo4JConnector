@@ -84,14 +84,12 @@ public class TransactionWorker implements TransactionWork<String>
 					Value actualValue = record.get(key);
 
 					try {
-						results += "{" + key + ":" + getJsonFromValues(actualValue) + "}";
+						results += "{\"" + key + "\":" + getJsonFromValues(actualValue) + "}";
 					}
 					catch (NotSerializableException e)
 					{
 						LOGGER.error("Couldn't get json from values", e.getMessage());
 					}
-
-					LOGGER.debug("Value of " + key + ": " + mapper.writeValueAsString(record.get(key).asNode().keys()));
 				}
 			}
 			catch (JsonProcessingException e1)
@@ -212,7 +210,7 @@ public class TransactionWorker implements TransactionWork<String>
 
 				if(keyValue instanceof Value)
 				{
-					result += key + ":" + getJsonFromValues((Value) keyValue);
+					result += "\"" + key + "\":" + getJsonFromValues((Value) keyValue);
 				}
 				else
 				{
@@ -283,7 +281,7 @@ public class TransactionWorker implements TransactionWork<String>
 			}
 
 			Value actualValue = value.get(key);
-			result = "{" + key + ":" + getJsonFromValues(actualValue) + "}";
+			result = "{\"" + key + "\":" + getJsonFromValues(actualValue) + "}";
 		}
 
 		result += "]";
@@ -320,7 +318,7 @@ public class TransactionWorker implements TransactionWork<String>
 	}
 
 	private String relationshipsToString(Path value) throws NotSerializableException {
-		String result = "relationships:[";
+		String result = "\"relationships\":[";
 		boolean firstInner;
 		firstInner = true;
 		for(Relationship relationship : value.relationships())
@@ -359,10 +357,10 @@ public class TransactionWorker implements TransactionWork<String>
 			}
 
 			Value actualValue = relationship.get(key);
-			result = "{" + key + ":" + getJsonFromValues(actualValue) + "}";
+			result = "{\"" + key + "\":" + getJsonFromValues(actualValue) + "}";
 		}
 
-		result += "], startNodeId: " + relationship.startNodeId() + ", endNodeId: " + relationship.endNodeId() + "}";
+		result += "], \"startNodeId\": " + relationship.startNodeId() + ", \"endNodeId\": " + relationship.endNodeId() + "}";
 		return result;
 	}
 
@@ -385,7 +383,7 @@ public class TransactionWorker implements TransactionWork<String>
 			}
 
 			Value actualValue = node.get(key);
-			result = "{" + key + ":" + getJsonFromValues(actualValue) + "}";
+			result = "{\"" + key + "\":" + getJsonFromValues(actualValue) + "}";
 		}
 
 		result += "]";
