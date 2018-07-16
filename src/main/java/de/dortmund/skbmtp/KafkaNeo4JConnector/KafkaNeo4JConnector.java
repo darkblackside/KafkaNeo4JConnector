@@ -33,7 +33,7 @@ public class KafkaNeo4JConnector implements Runnable
 	public static final String KAFKA_INPUTTOPIC = "topic2";
 	public static final String KAFKA_OUTPUTTOPIC = "topic3";
 	public static final String KAFKA_GROUPID = "myconsumer";
-	
+
 	String neo4jUrl = NEO4J_URL;
 	String neo4jUsername = NEO4J_USERNAME;
 	String neo4jPassword = NEO4J_PASSWORD;
@@ -42,6 +42,10 @@ public class KafkaNeo4JConnector implements Runnable
 	String kafkaOutput = KAFKA_OUTPUTTOPIC;
 	String kafkaGroupId = KAFKA_GROUPID;
 	Settings settings = null;
+
+	private CountDownLatch latch;
+
+	private KafkaStreams streams;
 
 	public KafkaNeo4JConnector(String[] args)
 	{
@@ -82,7 +86,7 @@ public class KafkaNeo4JConnector implements Runnable
 		{
 			kafkaGroupId = args[6];
 		}
-		
+
 		if(settings != null)
 		{
 			neo4jUrl = settings.getNeo4JServer();
@@ -95,6 +99,7 @@ public class KafkaNeo4JConnector implements Runnable
 		}
 	}
 
+	@Override
 	public void run()
 	{
 		final String finNeo4JUrl = neo4jUrl;
@@ -108,8 +113,8 @@ public class KafkaNeo4JConnector implements Runnable
 		mappedValues.to(kafkaOutput, Produced.with(Serdes.String(), new Neo4JCommandSchema()));
 
 		final Topology topology = builder.build();
-		final KafkaStreams streams = new KafkaStreams(topology, Util.createStreamsProperties(kafkaServers, kafkaGroupId));
-		final CountDownLatch latch = new CountDownLatch(1);
+		streams = new KafkaStreams(topology, Util.createStreamsProperties(kafkaServers, kafkaGroupId));
+		latch = new CountDownLatch(1);
 
 		Runtime.getRuntime().addShutdownHook(new Thread("streams-shutdown-hook") {
 			@Override
@@ -127,11 +132,14 @@ public class KafkaNeo4JConnector implements Runnable
 		}
 		System.exit(0);
 	}
-	
+
 	public static void main(String[] args) throws Exception
 	{
 		KafkaNeo4JConnector conn = new KafkaNeo4JConnector(args);
 		Thread t = new Thread(conn);
 		t.start();
+		System.in.read();
+		conn.streams.close();
+		conn.latch.countDown();
 	}
 }
