@@ -116,17 +116,10 @@ public class KafkaNeo4JConnector implements Runnable
 		streams = new KafkaStreams(topology, Util.createStreamsProperties(kafkaServers, kafkaGroupId));
 		latch = new CountDownLatch(1);
 
-		Runtime.getRuntime().addShutdownHook(new Thread("streams-shutdown-hook") {
-			@Override
-			public void run() {
-				streams.close();
-				latch.countDown();
-			}
-		});
-
 		try {
 			streams.start();
 			latch.await();
+			streams.close();
 		} catch (Throwable e) {
 			System.exit(1);
 		}
@@ -139,7 +132,6 @@ public class KafkaNeo4JConnector implements Runnable
 		Thread t = new Thread(conn);
 		t.start();
 		System.in.read();
-		conn.streams.close();
 		conn.latch.countDown();
 	}
 }
