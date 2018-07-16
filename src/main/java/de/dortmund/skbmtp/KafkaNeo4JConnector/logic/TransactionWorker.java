@@ -18,7 +18,6 @@ import org.neo4j.driver.v1.types.Node;
 import org.neo4j.driver.v1.types.Path;
 import org.neo4j.driver.v1.types.Relationship;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.dortmund.skbmtp.KafkaNeo4JConnector.model.Neo4JCommand;
@@ -64,37 +63,30 @@ public class TransactionWorker implements TransactionWork<String>
 				results = results + ",";
 			}
 
-			try
+			List<String> keys = record.keys();
+
+			boolean firstInner = true;
+
+			for(String key : keys)
 			{
-				List<String> keys = record.keys();
-
-				boolean firstInner = true;
-
-				for(String key : keys)
+				if(firstInner)
 				{
-					if(firstInner)
-					{
-						firstInner = false;
-					}
-					else
-					{
-						results += ",";
-					}
-
-					Value actualValue = record.get(key);
-
-					try {
-						results += "{\"" + key + "\":" + getJsonFromValues(actualValue) + "}";
-					}
-					catch (NotSerializableException e)
-					{
-						LOGGER.error("Couldn't get json from values", e.getMessage());
-					}
+					firstInner = false;
 				}
-			}
-			catch (JsonProcessingException e1)
-			{
-				e1.printStackTrace();
+				else
+				{
+					results += ",";
+				}
+
+				Value actualValue = record.get(key);
+
+				try {
+					results += "{\"" + key + "\":" + getJsonFromValues(actualValue) + "}";
+				}
+				catch (NotSerializableException e)
+				{
+					LOGGER.error("Couldn't get json from values", e.getMessage());
+				}
 			}
 		}
 
