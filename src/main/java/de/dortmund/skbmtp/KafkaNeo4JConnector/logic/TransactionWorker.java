@@ -165,8 +165,18 @@ public class TransactionWorker implements TransactionWork<String>
 			List<Object> value = actualKey.asList();
 
 			String result = "[";
+			boolean firstInner = true;
 			for(Object o : value)
 			{
+				if(firstInner)
+				{
+					firstInner = false;
+				}
+				else
+				{
+					result += ",";
+				}
+
 				if(o instanceof Value)
 				{
 					result += getJsonFromValues((Value)o);
@@ -186,18 +196,27 @@ public class TransactionWorker implements TransactionWork<String>
 		try	{
 			Map<String, Object> value = actualKey.asMap();
 			String result ="{";
+			boolean firstInner = true;
 			for(String key : value.keySet())
 			{
+				if(firstInner)
+				{
+					firstInner = false;
+				}
+				else
+				{
+					result += ",";
+				}
 				Object keyValue = value.get(key);
 
 				if(keyValue instanceof Value)
 				{
-					result += getJsonFromValues((Value) keyValue);
+					result += key + ":" + getJsonFromValues((Value) keyValue);
 				}
 				else
 				{
 					//TODO - Björn Merschmeier - 16.07.2018 - do something with an object
-					result += keyValue.toString();
+					result += key + ":" + keyValue.toString();
 				}
 			}
 
