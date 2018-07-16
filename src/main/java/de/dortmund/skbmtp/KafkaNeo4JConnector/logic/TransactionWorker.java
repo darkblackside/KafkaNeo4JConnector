@@ -80,9 +80,12 @@ public class TransactionWorker implements TransactionWork<String>
 
 		results = results + "]";
 
+		LOGGER.debug("try serialize all records once");
+
 		try
 		{
 			results = mapper.writeValueAsString(recordList);
+			LOGGER.debug(results);
 		}
 		catch (JsonProcessingException e)
 		{
