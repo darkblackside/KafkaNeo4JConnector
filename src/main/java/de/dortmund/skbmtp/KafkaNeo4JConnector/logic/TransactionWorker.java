@@ -52,7 +52,7 @@ public class TransactionWorker implements TransactionWork<String>
 
 				for(String key : keys)
 				{
-					LOGGER.debug("Value of " + key + ": " + mapper.writeValueAsString(record.get(key)));
+					LOGGER.debug("Value of " + key + ": " + mapper.writeValueAsString(record.get(key).asNode().keys()));
 				}
 			}
 			catch (JsonProcessingException e1)
