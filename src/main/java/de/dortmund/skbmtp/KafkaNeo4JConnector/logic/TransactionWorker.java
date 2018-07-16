@@ -1,6 +1,7 @@
 package de.dortmund.skbmtp.KafkaNeo4JConnector.logic;
 
 import java.io.NotSerializableException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -216,7 +217,14 @@ public class TransactionWorker implements TransactionWork<String>
 				else
 				{
 					//TODO - Björn Merschmeier - 16.07.2018 - do something with an object
-					result += key + ":" + keyValue.toString();
+					if(keyValue instanceof String || keyValue instanceof Date)
+					{
+						result += key + ":'" + keyValue.toString() + "'";
+					}
+					else
+					{
+						result += key + ":" + keyValue.toString();
+					}
 				}
 			}
 
