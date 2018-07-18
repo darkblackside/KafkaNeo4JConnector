@@ -12,6 +12,7 @@ import org.apache.kafka.streams.StreamsConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.neo4j.driver.v1.Value;
+import org.neo4j.driver.v1.exceptions.value.LossyCoercion;
 import org.neo4j.driver.v1.exceptions.value.Uncoercible;
 import org.neo4j.driver.v1.types.Entity;
 import org.neo4j.driver.v1.types.Node;
@@ -200,28 +201,28 @@ public class Util
 		try	{
 			Integer actualValue = new Integer(value.asInt());
 			return new Neo4JValue<Integer>(actualValue);
-		} catch(Uncoercible e) {
+		} catch(Uncoercible | LossyCoercion e) {
 			LOGGER.debug("Object is not a int");
 		}
 
 		try {
 			Double actualValue = new Double(value.asDouble());
 			return new Neo4JValue<Double>(actualValue);
-		} catch(Uncoercible e) {
+		} catch(Uncoercible | LossyCoercion e) {
 			LOGGER.debug("Object is not a double");
 		}
 
 		try	{
 			Float actualValue = new Float(value.asFloat());
 			return new Neo4JValue<Float>(actualValue);
-		} catch(Uncoercible e) {
+		} catch(Uncoercible | LossyCoercion e) {
 			LOGGER.debug("Object is not a float");
 		}
 
 		try	{
 			Long actualValue = new Long(value.asLong());
 			return new Neo4JValue<Long>(actualValue);
-		} catch(Uncoercible e) {
+		} catch(Uncoercible | LossyCoercion e) {
 			LOGGER.debug("Object is not a long");
 		}
 
