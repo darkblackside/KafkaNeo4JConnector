@@ -11,8 +11,8 @@ public class Neo4JPath implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
-	private List<Neo4JNode> nodes;
-	private List<Neo4JRelationship> relationships;
+	public List<Neo4JNode> nodes;
+	public List<Neo4JRelationship> relationships;
 
 	public Neo4JPath()
 	{

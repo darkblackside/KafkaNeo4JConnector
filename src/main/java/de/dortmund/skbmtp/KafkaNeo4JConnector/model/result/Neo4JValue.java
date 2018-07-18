@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class Neo4JValue<T> implements Serializable
 {
 	private static final long serialVersionUID = 1L;
-	private T value;
+	public T value;
 	
 	/**
 	 * Do not use, default constructor only for serialization/deserialization

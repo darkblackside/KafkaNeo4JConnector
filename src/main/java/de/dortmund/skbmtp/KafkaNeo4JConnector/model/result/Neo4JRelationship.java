@@ -14,9 +14,9 @@ public class Neo4JRelationship
 {
 
 	private Map<String, Neo4JValue<?>> properties;
-	private long id;
-	private long startNodeId;
-	private long endNodeId;
+	public long id;
+	public long startNodeId;
+	public long endNodeId;
 	
 	/**
 	 * Do not use, default constructor only for serialization/deserialization

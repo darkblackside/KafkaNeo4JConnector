@@ -12,7 +12,7 @@ import de.dortmund.skbmtp.KafkaNeo4JConnector.logic.Util;
 public class Neo4JEntity implements Serializable
 {
 	private static final long serialVersionUID = 1L;
-	private Map<String, Neo4JValue<?>> properties;
+	public Map<String, Neo4JValue<?>> properties;
 
 	/**
 	 * Do not use, default constructor only for serialization/deserialization
