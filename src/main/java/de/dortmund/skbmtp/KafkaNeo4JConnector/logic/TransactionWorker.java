@@ -33,7 +33,7 @@ public class TransactionWorker implements TransactionWork<List<Neo4JResults>>
 
 		try
 		{
-			return writeToResultObject(command, result);
+			return writeToResultObject(result);
 		}
 		catch (NotSerializableException e)
 		{
@@ -42,7 +42,7 @@ public class TransactionWorker implements TransactionWork<List<Neo4JResults>>
 		}
 	}
 
-	private List<Neo4JResults> writeToResultObject(Neo4JCommand command, StatementResult result) throws NotSerializableException
+	private List<Neo4JResults> writeToResultObject(StatementResult result) throws NotSerializableException
 	{
 		LOGGER.debug("Write results to result object");
 
@@ -50,9 +50,9 @@ public class TransactionWorker implements TransactionWork<List<Neo4JResults>>
 
 		while(result.hasNext())
 		{
+			LOGGER.debug("Results to object now");
 			Record record = result.next();
 
-			LOGGER.debug("Results to object now");
 			Neo4JResults currentResults = Neo4JResults.fromRecord(record);
 
 			resultObject.add(currentResults);
