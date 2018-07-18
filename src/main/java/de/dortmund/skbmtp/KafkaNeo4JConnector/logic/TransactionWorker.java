@@ -37,6 +37,7 @@ public class TransactionWorker implements TransactionWork<List<Neo4JResults>>
 		}
 		catch (NotSerializableException e)
 		{
+			LOGGER.error("Can't deserialize command results", e.getMessage());
 			throw new RuntimeException(e);
 		}
 	}
@@ -51,6 +52,7 @@ public class TransactionWorker implements TransactionWork<List<Neo4JResults>>
 		{
 			Record record = result.next();
 
+			LOGGER.debug("Results to object now");
 			Neo4JResults currentResults = Neo4JResults.fromRecord(record);
 
 			resultObject.add(currentResults);
