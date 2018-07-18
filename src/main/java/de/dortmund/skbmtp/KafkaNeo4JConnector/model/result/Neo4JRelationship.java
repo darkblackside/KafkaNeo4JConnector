@@ -17,7 +17,15 @@ public class Neo4JRelationship
 	private long id;
 	private long startNodeId;
 	private long endNodeId;
-
+	
+	/**
+	 * Do not use, default constructor only for serialization/deserialization
+	 */
+	public Neo4JRelationship()
+	{
+		
+	}
+	
 	public Neo4JRelationship(long id, long startNodeId, long endNodeId, Map<String, Neo4JValue<?>> properties)
 	{
 		this.setProperties(properties);

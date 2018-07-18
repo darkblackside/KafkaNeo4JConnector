@@ -14,6 +14,14 @@ public class Neo4JEntity implements Serializable
 	private static final long serialVersionUID = 1L;
 	private Map<String, Neo4JValue<?>> properties;
 
+	/**
+	 * Do not use, default constructor only for serialization/deserialization
+	 */
+	public Neo4JEntity()
+	{
+		
+	}
+	
 	public Neo4JEntity(Map<String, Neo4JValue<?>> properties)
 	{
 		this.setProperties(properties);

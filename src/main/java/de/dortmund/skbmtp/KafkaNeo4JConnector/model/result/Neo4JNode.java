@@ -17,6 +17,14 @@ public class Neo4JNode implements Serializable
 	private Map<String, Neo4JValue<?>> properties;
 	private long id;
 
+	/**
+	 * Do not use, default constructor only for serialization/deserialization
+	 */
+	public Neo4JNode()
+	{
+		
+	}
+	
 	public Neo4JNode(long id, Map<String, Neo4JValue<?>> properties)
 	{
 		this.setProperties(properties);
