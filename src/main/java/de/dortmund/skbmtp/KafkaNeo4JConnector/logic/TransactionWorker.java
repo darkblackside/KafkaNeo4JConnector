@@ -48,6 +48,7 @@ public class TransactionWorker implements TransactionWork<List<Neo4JResults>>
 
 		List<Neo4JResults> resultObject = new ArrayList<Neo4JResults>();
 
+		LOGGER.debug("Result has next:" + result.hasNext());
 		while(result.hasNext())
 		{
 			LOGGER.debug("Results to object now");
