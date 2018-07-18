@@ -71,7 +71,7 @@ public class Util
 		}
 		catch(Uncoercible e)
 		{
-
+			LOGGER.debug("is not a list or a map");
 		}
 
 		try	{
@@ -197,6 +197,13 @@ public class Util
 			LOGGER.debug("Object is not a byte-array");
 		}
 
+		try	{
+			Integer actualValue = new Integer(value.asInt());
+			return new Neo4JValue<Integer>(actualValue);
+		} catch(Uncoercible e) {
+			LOGGER.debug("Object is not a int");
+		}
+
 		try {
 			Double actualValue = new Double(value.asDouble());
 			return new Neo4JValue<Double>(actualValue);
@@ -209,13 +216,6 @@ public class Util
 			return new Neo4JValue<Float>(actualValue);
 		} catch(Uncoercible e) {
 			LOGGER.debug("Object is not a float");
-		}
-
-		try	{
-			Integer actualValue = new Integer(value.asInt());
-			return new Neo4JValue<Integer>(actualValue);
-		} catch(Uncoercible e) {
-			LOGGER.debug("Object is not a int");
 		}
 
 		try	{
