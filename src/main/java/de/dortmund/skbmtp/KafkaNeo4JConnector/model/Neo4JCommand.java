@@ -1,6 +1,7 @@
 package de.dortmund.skbmtp.KafkaNeo4JConnector.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -8,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import de.dortmund.skbmtp.KafkaNeo4JConnector.model.result.Neo4JResults;
 import iot.jcypher.query.JcQuery;
 import iot.jcypher.query.writer.Format;
 import iot.jcypher.util.Util;
@@ -37,7 +39,7 @@ public class Neo4JCommand implements Serializable
 	private String stringErrors;
 
 	@JsonInclude
-	private String result;
+	private List<Neo4JResults> result;
 
 	/**
 	 * Do not use this Constructor! It is only needed for serialization
@@ -134,7 +136,7 @@ public class Neo4JCommand implements Serializable
 	 * The result of the command in Neo4J
 	 * @return
 	 */
-	public String getResult()
+	public List<Neo4JResults> getResult()
 	{
 		return result;
 	}
@@ -142,9 +144,9 @@ public class Neo4JCommand implements Serializable
 	 * Only for internal use to set result when command is excecuted
 	 * @return
 	 */
-	public void setResult(String result)
+	public void setResult(List<Neo4JResults> result2)
 	{
-		this.result = result;
+		this.result = result2;
 	}
 
 	public void setError(String string)

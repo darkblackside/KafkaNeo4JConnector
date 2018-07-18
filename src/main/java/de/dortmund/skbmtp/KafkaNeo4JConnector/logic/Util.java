@@ -105,17 +105,17 @@ public class Util
 		throw new NotSerializableException("Missing implementation for object-type");
 	}
 
-	private static Neo4JValue<Neo4JEntity> fromEntity(Entity value)	{
+	private static Neo4JValue<Neo4JEntity> fromEntity(Entity value) throws NotSerializableException	{
 		Neo4JEntity result = Neo4JEntity.fromEntity(value);
 		return new Neo4JValue<Neo4JEntity>(result);
 	}
 
-	private static Neo4JValue<Neo4JPath> pathToString(Path value) {
+	private static Neo4JValue<Neo4JPath> pathToString(Path value) throws NotSerializableException {
 		Neo4JPath path = Neo4JPath.fromPath(value);
 		return new Neo4JValue<Neo4JPath>(path);
 	}
 
-	private static Neo4JValue<Neo4JRelationship> fromRelationship(Relationship relationship)
+	private static Neo4JValue<Neo4JRelationship> fromRelationship(Relationship relationship) throws NotSerializableException
 	{
 		Neo4JRelationship result = Neo4JRelationship.fromRelationship(relationship);
 
