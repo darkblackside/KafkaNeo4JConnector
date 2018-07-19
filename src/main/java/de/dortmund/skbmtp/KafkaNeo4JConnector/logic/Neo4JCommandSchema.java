@@ -33,7 +33,10 @@ SerializationSchema<Neo4JCommand>, DeserializationSchema<Neo4JCommand> {
 		System.out.println("deserialize command: " + id);
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			return mapper.readValue(data, Neo4JCommand.class);
+			Neo4JCommand command = mapper.readValue(data, Neo4JCommand.class);
+			LOGGER.info("Deserialize neo4jcommandIdentifier: " + command.getCommandIdentifier());
+			System.out.println("Deserialize neo4jcommandIdentifier: " + command.getCommandIdentifier());
+			return command;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -43,6 +46,8 @@ SerializationSchema<Neo4JCommand>, DeserializationSchema<Neo4JCommand> {
 	public byte[] serialize(String id, Neo4JCommand data) {
 		LOGGER.info("Serialize id: " + id);
 		System.out.println("Serialize id: " + id);
+		LOGGER.info("Serialize neo4jcommandIdentifier: " + data.getCommandIdentifier());
+		System.out.println("Serialize neo4jcommandIdentifier: " + data.getCommandIdentifier());
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 
