@@ -9,7 +9,6 @@ import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.Produced;
-import org.apache.kafka.streams.kstream.ValueMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.neo4j.driver.v1.AuthTokens;
@@ -18,7 +17,6 @@ import org.neo4j.driver.v1.GraphDatabase;
 import org.neo4j.driver.v1.Session;
 
 import de.dortmund.skbmtp.KafkaNeo4JConnector.logic.Neo4JCommandSchema;
-import de.dortmund.skbmtp.KafkaNeo4JConnector.logic.Neo4JWriter;
 import de.dortmund.skbmtp.KafkaNeo4JConnector.logic.RunCommandMapper;
 import de.dortmund.skbmtp.KafkaNeo4JConnector.logic.Settings;
 import de.dortmund.skbmtp.KafkaNeo4JConnector.logic.Util;
