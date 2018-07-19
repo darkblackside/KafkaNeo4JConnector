@@ -4,9 +4,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.neo4j.driver.v1.AuthTokens;
 import org.neo4j.driver.v1.Driver;
-import org.neo4j.driver.v1.GraphDatabase;
 import org.neo4j.driver.v1.Session;
 
 import de.dortmund.skbmtp.KafkaNeo4JConnector.model.Neo4JCommand;
@@ -20,15 +18,14 @@ public class Neo4JWriter
 	{
 	}
 
-	public static Neo4JCommand write(Neo4JCommand command, String serverUri, String serverUsername, String serverPassword)
+	public static Neo4JCommand write(Session session, Neo4JCommand command)
 	{
 		LOGGER.info("Write neo4j command!");
 
 		if(command.getStringCommand() != null)
 		{
-			Driver driver = GraphDatabase.driver(serverUri, AuthTokens.basic(serverUsername, serverPassword));
 
-			try (Session session = driver.session()) {
+			try {
 				List<Neo4JResults> result = session.writeTransaction(new TransactionWorker(command));
 				command.setResult(result);
 			}

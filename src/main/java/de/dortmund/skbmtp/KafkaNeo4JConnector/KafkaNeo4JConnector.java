@@ -9,11 +9,17 @@ import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.Produced;
+import org.apache.kafka.streams.kstream.ValueMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.neo4j.driver.v1.AuthTokens;
+import org.neo4j.driver.v1.Driver;
+import org.neo4j.driver.v1.GraphDatabase;
+import org.neo4j.driver.v1.Session;
 
 import de.dortmund.skbmtp.KafkaNeo4JConnector.logic.Neo4JCommandSchema;
 import de.dortmund.skbmtp.KafkaNeo4JConnector.logic.Neo4JWriter;
+import de.dortmund.skbmtp.KafkaNeo4JConnector.logic.RunCommandMapper;
 import de.dortmund.skbmtp.KafkaNeo4JConnector.logic.Settings;
 import de.dortmund.skbmtp.KafkaNeo4JConnector.logic.Util;
 import de.dortmund.skbmtp.KafkaNeo4JConnector.model.Neo4JCommand;
@@ -102,14 +108,14 @@ public class KafkaNeo4JConnector implements Runnable
 	@Override
 	public void run()
 	{
-		final String finNeo4JUrl = neo4jUrl;
-		final String finNeo4JUsername = neo4jUsername;
-		final String finNeo4JPassword = neo4jPassword;
+		final Driver driver = GraphDatabase.driver(neo4jUrl, AuthTokens.basic(neo4jUsername, neo4jPassword));
+		Session s = driver.session();
+		RunCommandMapper runCommandMapper = new RunCommandMapper(s);
 
 		final StreamsBuilder builder = new StreamsBuilder();
 		KStream<String, Neo4JCommand> source = builder.stream(kafkaInput, Consumed.with(Serdes.String(), new Neo4JCommandSchema()));
 		LOGGER.info("created streams build");
-		KStream<String, Neo4JCommand> mappedValues = source.<Neo4JCommand>mapValues(value -> (Neo4JWriter.write(value, finNeo4JUrl, finNeo4JUsername, finNeo4JPassword)));
+		KStream<String, Neo4JCommand> mappedValues = source.<Neo4JCommand>mapValues(runCommandMapper);
 		mappedValues.to(kafkaOutput, Produced.with(Serdes.String(), new Neo4JCommandSchema()));
 
 		final Topology topology = builder.build();
@@ -120,6 +126,8 @@ public class KafkaNeo4JConnector implements Runnable
 			streams.start();
 			latch.await();
 			streams.close();
+			s.close();
+			driver.close();
 		} catch (Throwable e) {
 			System.exit(1);
 		}
