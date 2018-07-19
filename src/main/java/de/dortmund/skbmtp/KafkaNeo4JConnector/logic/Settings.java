@@ -39,6 +39,7 @@ public class Settings {
 	private String neo4jServer;
 	private String neo4jUser;
 	private String neo4jPassword;
+	private String botToken;
 
 	private Settings() {
 	}
@@ -128,6 +129,10 @@ public class Settings {
 		return neo4jPassword;
 	}
 
+	public String getBottoken() {
+		return botToken;
+	}
+
 	private void loadSettings(String filename) {
 		props = new Properties();
 
@@ -169,5 +174,7 @@ public class Settings {
 				props.getProperty(SourceConstant.TWITTER_TRACK_TERMS_SEPARATOR));
 		trackLanguages = Util.splitStringBySeparator(props.getProperty(SourceConstant.TWITTER_TRACK_LANGUAGES),
 				props.getProperty(SourceConstant.TWITTER_TRACK_LANGUAGES_SEPARATOR));
+		
+		botToken = props.getProperty(SourceConstant.BOTTOKEN, "testBotToken");
 	}
 }

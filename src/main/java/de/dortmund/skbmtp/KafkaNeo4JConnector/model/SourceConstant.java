@@ -21,4 +21,5 @@ public class SourceConstant {
 	public static final String NEO4J_SERVER = "Neo4J.Server";
 	public static final String NEO4J_USER = "Neo4J.Username";
 	public static final String NEO4J_PASSWORD = "Neo4J.Password";
+	public static final String BOTTOKEN = "Telegram.Bottoken";
 }
