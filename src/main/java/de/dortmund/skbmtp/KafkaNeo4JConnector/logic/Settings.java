@@ -33,6 +33,7 @@ public class Settings {
 	private String improvedTwitterTopic;
 	private String neo4jFeedbackTopic;
 	private String resultTopic;
+	private String elasticTopic;
 
 	private String dateFormat;
 
@@ -113,6 +114,10 @@ public class Settings {
 		return resultTopic;
 	}
 
+	public String getKafkaTopicElastic() {
+		return elasticTopic;
+	}
+
 	public String getJsonDateFormat() {
 		return dateFormat;
 	}
@@ -165,6 +170,7 @@ public class Settings {
 		improvedTwitterTopic = props.getProperty(SourceConstant.KAFKA_TWITTER_IMPROVED_TOPIC, "topic2");
 		neo4jFeedbackTopic = props.getProperty(SourceConstant.KAFKA_NEO4J_CONFIRMATION_TOPIC, "topic3");
 		resultTopic = props.getProperty(SourceConstant.KAFKA_RESULT_TOPIC, "topic4");
+		elasticTopic = props.getProperty(SourceConstant.KAFKA_ELASTIC_TOPIC, "topic5");
 
 		neo4jServer = props.getProperty(SourceConstant.NEO4J_SERVER, "bolt://localhost:7687");
 		neo4jUser = props.getProperty(SourceConstant.NEO4J_USER, "neo4j");

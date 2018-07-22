@@ -12,6 +12,7 @@ public class SourceConstant {
 	public static final String KAFKA_TWITTER_IMPROVED_TOPIC = "Kafka.TwitterImprovedTopic";
 	public static final String KAFKA_NEO4J_CONFIRMATION_TOPIC = "Kafka.Neo4JConfirmationTopic";
 	public static final String KAFKA_RESULT_TOPIC = "Kafka.ResultTopic";
+	public static final String KAFKA_ELASTIC_TOPIC = "Kafka.ElasticTopic";
 	public static final String TWITTER_FILTER_MESSAGES_PER_SECOND = "Twitter.FilterMessagesPerMinute";
 	public static final String TWITTER_TRACK_TERMS = "Twitter.TrackTerms";
 	public static final String TWITTER_TRACK_TERMS_SEPARATOR = "Twitter.TrackTerms.Separator";
