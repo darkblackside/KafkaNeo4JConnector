@@ -12,17 +12,11 @@ import de.dortmund.skbmtp.KafkaNeo4JConnector.model.Neo4JCommand;
 
 public class RunCommandMapper implements ValueMapper<Neo4JCommand, Neo4JCommand>, Runnable
 {
-	private Session session;
 	private String neo4jUrl;
 	private String neo4jUsername;
 	private String neo4jPassword;
 	private Queue<Neo4JCommand> resultQueue;
 	private Neo4JCommand value;
-
-	public RunCommandMapper(Session s)
-	{
-		this.session = s;
-	}
 	
 	public RunCommandMapper(String neo4jUrl, String neo4jUsername, String neo4jPassword) {
 		this.neo4jUrl = neo4jUrl;
