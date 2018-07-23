@@ -43,9 +43,9 @@ public class RunCommandMapper implements ValueMapper<Neo4JCommand, Neo4JCommand>
 	{
 		final Driver driver = GraphDatabase.driver(neo4jUrl, AuthTokens.basic(neo4jUsername, neo4jPassword));
 		
-		Neo4JCommand result = Neo4JWriter.write(session, value);
-		
 		Session s = driver.session();
+		
+		Neo4JCommand result = Neo4JWriter.write(s, value);
 		s.close();
 		driver.close();
 		
@@ -57,9 +57,10 @@ public class RunCommandMapper implements ValueMapper<Neo4JCommand, Neo4JCommand>
 	{
 		final Driver driver = GraphDatabase.driver(neo4jUrl, AuthTokens.basic(neo4jUsername, neo4jPassword));
 		
-		Neo4JCommand result = Neo4JWriter.write(session, value);
-		
 		Session s = driver.session();
+		
+		Neo4JCommand result = Neo4JWriter.write(s, value);
+		
 		s.close();
 		driver.close();
 		
