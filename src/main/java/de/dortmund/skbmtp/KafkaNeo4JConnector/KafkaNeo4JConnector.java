@@ -11,10 +11,6 @@ import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.Produced;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.neo4j.driver.v1.AuthTokens;
-import org.neo4j.driver.v1.Driver;
-import org.neo4j.driver.v1.GraphDatabase;
-import org.neo4j.driver.v1.Session;
 
 import de.dortmund.skbmtp.KafkaNeo4JConnector.logic.Neo4JCommandSchema;
 import de.dortmund.skbmtp.KafkaNeo4JConnector.logic.RunCommandMapper;
@@ -22,10 +18,6 @@ import de.dortmund.skbmtp.KafkaNeo4JConnector.logic.Settings;
 import de.dortmund.skbmtp.KafkaNeo4JConnector.logic.Util;
 import de.dortmund.skbmtp.KafkaNeo4JConnector.model.Neo4JCommand;
 
-/**
- * Hello world!
- *
- */
 public class KafkaNeo4JConnector implements Runnable
 {
 	private static final Logger LOGGER = LogManager.getLogger(KafkaNeo4JConnector.class);
@@ -106,9 +98,7 @@ public class KafkaNeo4JConnector implements Runnable
 	@Override
 	public void run()
 	{
-		final Driver driver = GraphDatabase.driver(neo4jUrl, AuthTokens.basic(neo4jUsername, neo4jPassword));
-		Session s = driver.session();
-		RunCommandMapper runCommandMapper = new RunCommandMapper(s);
+		RunCommandMapper runCommandMapper = new RunCommandMapper(neo4jUrl, neo4jUsername, neo4jPassword);
 
 		final StreamsBuilder builder = new StreamsBuilder();
 		KStream<String, Neo4JCommand> source = builder.stream(kafkaInput, Consumed.with(Serdes.String(), new Neo4JCommandSchema()));
@@ -124,8 +114,6 @@ public class KafkaNeo4JConnector implements Runnable
 			streams.start();
 			latch.await();
 			streams.close();
-			s.close();
-			driver.close();
 		} catch (Throwable e) {
 			System.exit(1);
 		}
