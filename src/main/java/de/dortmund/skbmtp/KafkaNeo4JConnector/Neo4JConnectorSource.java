@@ -1,6 +1,8 @@
 package de.dortmund.skbmtp.KafkaNeo4JConnector;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Properties;
 import java.util.Queue;
@@ -50,6 +52,10 @@ public class Neo4JConnectorSource implements Runnable
 	
 	public void run()
 	{
+		Collection<String> topics = new ArrayList<String>();
+		topics.add(settings.getKafkaTopicImprovedTwitter());
+		consumer.subscribe(topics);
+		
 		while (!end) {
 			while(!resultQueue.isEmpty())
 			{
